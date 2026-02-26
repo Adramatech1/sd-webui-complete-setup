@@ -576,14 +576,17 @@ def downloader(url: str, path: str | Path, overwrite=False):
     aria2c_process = subprocess.Popen(shlex.split(aria2c), stdout=subprocess.PIPE, text=True, bufsize=1, start_new_session=True)
 
     with aria2c_process as sp:
-        for line in sp.stdout:
-            if line.startswith('[#'):
-                text = 'Download progress {}'.format(line.strip('\n'))
+        for _line in sp.stdout:
+            line = _line.strip()
+            if len(line) < 1 or 'Download aborted.' in line or 'errorCode=8 URI=' in line:
+                continue
+            elif line.startswith('[#'):
+                text = 'Download progress {}'.format(line)
                 print('\r' + ' ' * 100 + '\r' + text, end='\r', flush=True)
                 prev_line = text
             elif line.startswith('[COMPLETED]'):
                 if prev_line != '': print('')
-                print(f'Download completed')
+                print('--Download Completed--')
             elif re.search(error_pattern, line):
                 print(line)
                 redirect_url = re.search(error_pattern, line).group(1)
