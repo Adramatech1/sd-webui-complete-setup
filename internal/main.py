@@ -1,6 +1,7 @@
 import json
 import os
 import pty
+import re
 import shlex
 import shutil
 import signal
@@ -552,6 +553,13 @@ def downloader(url: str, path: str | Path, overwrite=False):
     prev_line = ''
     filename = os.path.basename(urlparse(url).path)
 
+    # Some new models on CivitAI will throw an error (error=22 404 Forbidden) when downloaded using aria2c.
+    # However, they are fine if downloaded directly using a redirect URL.
+    # So we will catch the final redirect URL and restart the download.
+    # This is a specific issue that only aria2c has, wget and curl have no issue.
+    error_pattern = r'errorCode=22 URI=(https?://\S+)'
+    redirect_url = ''
+
     if url.startswith('https://civitai.com/api/download/') and civitai_token() is not None:
         url += f'&token={civitai_token()}' if '?' in url else f'?token={civitai_token()}'
 
@@ -565,7 +573,9 @@ def downloader(url: str, path: str | Path, overwrite=False):
     if '.' in filename and filename.split('.')[-1] != '':
         aria2c += f' -o {filename}'
 
-    with subprocess.Popen(shlex.split(aria2c), stdout=subprocess.PIPE, text=True, bufsize=1) as sp:
+    aria2c_process = subprocess.Popen(shlex.split(aria2c), stdout=subprocess.PIPE, text=True, bufsize=1, start_new_session=True)
+
+    with aria2c_process as sp:
         for line in sp.stdout:
             if line.startswith('[#'):
                 text = 'Download progress {}'.format(line.strip('\n'))
@@ -574,8 +584,16 @@ def downloader(url: str, path: str | Path, overwrite=False):
             elif line.startswith('[COMPLETED]'):
                 if prev_line != '': print('')
                 print(f'Download completed')
+            elif re.search(error_pattern, line):
+                print(line)
+                redirect_url = re.search(error_pattern, line).group(1)
+                os.killpg(aria2c_process.pid, signal.SIGKILL)
+                break
             else:
                 print(line)
+
+    if redirect_url and redirect_url != url:
+        downloader(redirect_url, path)
 
 
 # Git clone repo
