@@ -137,6 +137,7 @@ class Envs:
         self.CUSTOM_UI_CONFIG_URL = 'CUSTOM_UI_CONFIG_URL'
         self.AUTOUPDATE_FORGE = 'AUTOUPDATE_FORGE'
         self.DARK_THEME = 'DARK_THEME'
+        self.CUDA_MALLOC = 'CUDA_MALLOC'
 
 
 class WebUI:
@@ -245,6 +246,10 @@ def autoupdate_forge() -> bool:
 
 def dark_theme() -> bool:
     return get_env(envs.DARK_THEME, 'True').lower() == 'true'
+
+
+def cuda_malloc() -> bool:
+    return get_env(envs.CUDA_MALLOC, 'False').lower() == 'true'
 
 
 # Run external program
@@ -478,7 +483,8 @@ def webui_settings():
 
     checkbox_list = [
         (envs.AUTOUPDATE_FORGE, 'Auto Update Forge', autoupdate_forge()),
-        (envs.DARK_THEME, 'Enable Dark Theme', dark_theme())
+        (envs.DARK_THEME, 'Enable Dark Theme', dark_theme()),
+        (envs.CUDA_MALLOC, 'Enable CUDA Malloc (Forge Only)', cuda_malloc())
     ]
 
     save_button = widgets.Button(description='Save', button_style='success')
@@ -752,6 +758,8 @@ def launch_webui(webui: WebUI):
 
     if webui_id == ui.forge:
         args += ' --text-encoder-dir /temp-storage/text_encoder'
+        if cuda_malloc():
+            args += ' --cuda-malloc'
 
     if platform_id == platform.paperspace:
         webui_port = port.paperspace
