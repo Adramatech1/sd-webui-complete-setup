@@ -9,7 +9,7 @@
             "version": "2024.10.15"
         }
     ],
-    "forge": [
+    "sdnext": [
         {
             "id": "paperspace",
             "version": "2024.10.15"
@@ -39,7 +39,7 @@
             "version": "2024.09.21"
         },
         {
-            "id": "forge",
+            "id": "sdnext",
             "version": "2024.09.21"
         }
     ]
