@@ -7,9 +7,9 @@
             "changelog": "• Major Updates 2024.09.21 Announcement - https://github.com/ffxvs/sd-webui-complete-setup/discussions/15"
         },
         {
-            "id": "forge",
+            "id": "sdnext",
             "version": "2024.09.21",
-            "url": "https://raw.githubusercontent.com/ffxvs/sd-webui-complete-setup/main/sd-webui-forge/sd_webui_forge_paperspace.ipynb",
+            "url": "https://raw.githubusercontent.com/ffxvs/sd-webui-complete-setup/main/sd-webui-sdnext/sd_webui_sdnext_paperspace.ipynb",
             "changelog": "• Major Updates 2024.09.21 Announcement - https://github.com/ffxvs/sd-webui-complete-setup/discussions/15"
         }
     ],
@@ -21,9 +21,9 @@
             "changelog": "• Major Updates 2024.09.21 Announcement - https://github.com/ffxvs/sd-webui-complete-setup/discussions/15"
         },
         {
-            "id": "forge",
+            "id": "sdnext",
             "version": "2024.09.21",
-            "url": "https://raw.githubusercontent.com/ffxvs/sd-webui-complete-setup/main/sd-webui-forge/sd_webui_forge_runpod.ipynb",
+            "url": "https://raw.githubusercontent.com/ffxvs/sd-webui-complete-setup/main/sd-webui-sdnext/sd_webui_sdnext_runpod.ipynb",
             "changelog": "• Major Updates 2024.09.21 Announcement - https://github.com/ffxvs/sd-webui-complete-setup/discussions/15"
         }
     ],
